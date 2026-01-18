@@ -36,55 +36,7 @@ export default {
   components: {
   },
   setup() {
-    const data = [
-      "accessit",
-      "accessnät/ABDY",
-      "accessoar/AHDYX",
-      "accessorisk/OY",
-      "accesstid/AHDYv",
-      "accidens/HDX",
-      "accidentell/OY",
-      "accis/HDYXU",
-      "accompli",
-      "accpump/ADGv",
-      "acetaldehyd/AHDYX",
-      "acetat/ABHDYX",
-      "acetatjon/AHD",
-      "aceton/ABYX",
-      "acetyl/AX",
-      "acetylen/ABDYXU",
-      "acetylenflaska/EAGY",
-      "acetylengas/HDX",
-      "acetylentub/AHDY",
-      "acetylera/NAPmDj",
-      "acetylering/ADYv",
-      "acetylsalicylsyra/EAGY",
-      "aciditet/AD",
-      "ack",
-      "Acke/A",
-      "Acketoft/A",
-      "ackja/EAG",
-      "ackjefärd/AHDY",
-      "acklamation/AHDYvf",
-      "acklamationsval/ABDY",
-      "acklimatisera/NAPmDY",
-      "acklimatisering/ADGYvf",
-      "ackommodation/AHDYv",
-      "ackommodationsväxel/EAIY",
-      "ackommodera/NAPmDj",
-      "ackompanjatris/HDY",
-      "ackompanjatör/AHDY",
-      "ackompanjemang/ABDYvf",
-      "ackompanjemangs-",
-      "ackompanjemangsinstrument/ABDY",
-      "ackompanjera/NAPmBY",
-      "ackord/TABDYsvUf",
-      "ackord-",
-      "ackordeon/ABDY",
-      "ackordera/NMAmDj",
-      "ackordering/ADGYv",
-      "ackordföljd/AHDY"
-    ]
+    var data = ''
     const length = ref(null)
     const lengthOptions = ref([])
     const lengthSelected = ref(null)
@@ -138,13 +90,28 @@ export default {
     }
     const matches = ref([])
     onBeforeMount(() => {
-      var tmpOptions = []
-      for (var i = 0; i < data.length; i++) {
-        const word = data[i].split("/",1)[0]
-        tmpOptions.push(word.length)
+      async function getData() {
+        const url = "https://raw.githubusercontent.com/jabbors/ordbok/refs/heads/master/docs/sv_SE.dic";
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+
+          const text = await response.text();
+          data = text.split(/\r?\n/)
+          var tmpOptions = []
+          for (var i = 0; i < data.length; i++) {
+            const word = data[i].split("/",1)[0]
+            tmpOptions.push(word.length)
+          }
+          lengthOptions.value = [...new Set(tmpOptions.sort(function(a, b) {return a - b}))]
+          lengthSelected.value = lengthOptions.value[0]
+        } catch (error) {
+          console.error(error.message);
+        }
       }
-      lengthOptions.value = [...new Set(tmpOptions.sort(function(a, b) {return a - b}))]
-      lengthSelected.value = lengthOptions.value[0]
+      getData()
     })
 
     return { length, lengthOptions, lengthSelected, clickLength, charForm, addChar, onCharFocus, clearCharForm, matches}
