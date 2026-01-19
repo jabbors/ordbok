@@ -86,7 +86,7 @@ export default {
     const matchWord = (word, knownChars) => {
       const chars = word.split("")
       for (const [key, value] of Object.entries(knownChars)) {
-        if (chars[key] != value) return false
+        if (chars[key].toLowerCase() != value.toLowerCase()) return false
       }
       return true
     }
