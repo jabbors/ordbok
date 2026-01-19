@@ -54,9 +54,13 @@ export default {
     var chars = {}
     const charForm = ref(null)
     const addChar = (e,pos) => {
-      // a-z (65-90), and å (219), ä (222) and ö (59)
-      if ((e.keyCode >=65 && e.keyCode <= 90) || e.keyCode == 219 || e.keyCode == 222 || e.keyCode == 59) {
-        chars[pos] = e.key
+      // a-z (65-90), and å (219), ä (222) and ö (59) or backspace (8)
+      if ((e.keyCode >=65 && e.keyCode <= 90) || e.keyCode == 219 || e.keyCode == 222 || e.keyCode == 59 || e.keyCode == 8) {
+        if (e.keyCode == 8) {
+          delete(chars[pos])
+        } else {
+          chars[pos] = e.key
+        }
         matchWords()
       }
     }
