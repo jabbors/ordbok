@@ -1,7 +1,7 @@
 <template>
-  <span>Ordbok</span>
+  <h3>Ordbok</h3>
   <div>
-    <span>Steg 1: Välj i antal bokstäver</span>
+    <p><b>Steg 1:</b> Välj i antal bokstäver</p>
     <div>
       <form>
         <select v-model="lengthSelected">
@@ -11,14 +11,14 @@
       </form>
     </div>
     <div v-if=length>
-      <span>Steg 2: Fyll i kända bokstäver</span>
+      <p><b>Steg 2:</b> Fyll i kända bokstäver</p>
       <div>
       <form ref="charForm">
         <input v-for="i in length" :key=i type="text" size="2" maxlength="1" onfocus="this.value=''" @focus="onCharFocus($event,i-1)" @keyup="addChar($event,i-1)" />
         <button type="button" @click="clearCharForm">Rensa</button>
       </form>
       </div>
-      <span>{{ matches.length }} träffar</span>
+      <p><b>{{ matches.length }} träffar</b></p>
       <div>
         <ul>
           <li v-for="match in matches" :key="match">{{ match }}</li>
@@ -30,6 +30,8 @@
 
 <script>
 import { ref, onBeforeMount } from 'vue';
+require('./assets/normalize.css')
+require('./assets/skeleton.css')
 
 export default {
   name: 'App',
