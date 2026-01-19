@@ -1,7 +1,7 @@
 <template>
   <h3>Ordbok</h3>
   <div>
-    <p><b>Steg 1:</b> Välj i antal bokstäver</p>
+    <p><b>Steg 1:</b> Välj antal bokstäver</p>
     <div>
       <form>
         <select v-model="lengthSelected">
