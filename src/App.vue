@@ -38,7 +38,7 @@ export default {
   components: {
   },
   setup() {
-    var data = ''
+    var data = []
     const length = ref(null)
     const lengthOptions = ref([])
     const lengthSelected = ref(null)
@@ -96,28 +96,37 @@ export default {
     }
     const matches = ref([])
     onBeforeMount(() => {
-      async function getData() {
+      async function initializeData() {
         const url = "https://raw.githubusercontent.com/jabbors/ordbok/refs/heads/master/docs/sv_SE.dic";
         try {
-          const response = await fetch(url);
+          const response = await fetch(url)
           if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
+            throw new Error(`Response status: ${response.status}`)
           }
-
-          const text = await response.text();
-          data = text.split(/\r?\n/)
           var tmpOptions = []
-          for (var i = 0; i < data.length; i++) {
-            const word = data[i].split("/",1)[0]
+          const text = await response.text()
+          const words = text.split(/\r?\n/)
+          for (var i = 0; i < words.length; i++) {
+            const word = words[i].split("/",1)[0]
+            if (word.length < 2) {
+              continue
+            }
+            if (data.includes(word)) {
+              continue
+            }
+            data.push(word)
+            if (tmpOptions.includes(word.length)) {
+              continue
+            }
             tmpOptions.push(word.length)
           }
-          lengthOptions.value = [...new Set(tmpOptions.sort(function(a, b) {return a - b}))]
+          lengthOptions.value = tmpOptions.sort(function(a, b) {return a - b})
           lengthSelected.value = lengthOptions.value[0]
         } catch (error) {
           console.error(error.message);
         }
       }
-      getData()
+      initializeData()
     })
 
     return { length, lengthOptions, lengthSelected, clickLength, charForm, addChar, onCharFocus, clearCharForm, matches}
