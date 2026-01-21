@@ -103,6 +103,7 @@ export default {
           if (!response.ok) {
             throw new Error(`Response status: ${response.status}`)
           }
+          var tmpData = []
           var tmpOptions = []
           const text = await response.text()
           const words = text.split(/\r?\n/)
@@ -111,16 +112,11 @@ export default {
             if (word.length < 2) {
               continue
             }
-            if (data.includes(word)) {
-              continue
-            }
-            data.push(word)
-            if (tmpOptions.includes(word.length)) {
-              continue
-            }
+            tmpData.push(word)
             tmpOptions.push(word.length)
           }
-          lengthOptions.value = tmpOptions.sort(function(a, b) {return a - b})
+          data = [...new Set(tmpData)]
+          lengthOptions.value = [...new Set(tmpOptions.sort(function(a, b) {return a - b}))]
           lengthSelected.value = lengthOptions.value[0]
         } catch (error) {
           console.error(error.message);
